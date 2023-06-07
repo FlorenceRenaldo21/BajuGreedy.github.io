@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Project Akhir Strategi Algortmik</title>
+</head >
+    <body id="myDIV">
+        <div class="sidebar" >
+            <div class="title"> 
+                <h2 >Penjadwalan Produksi Baju</h2>
+            </div>
+
+            <div class="menu">
+
+                <div class="sub-menu">
+                    <label> Greedy Max/Min </label>
+                    <select class="sel_mm" onchange="rendercontent1()">
+                        <option value="Max">Max</option>
+                        <option value="Min">Min</option>
+                    </select>
+                </div>
+
+                <div class="sub-menu">
+                    <label> Greedy By : </label>
+                    <select class="sel_gre" onchange="rendercontent1()">
+                        <option value="profit">Profit</option>
+                        <option value="weight">Weight</option>
+                        <option value="density">Density</option>
+                    </select>
+                </div>
+
+                <div class="sub-menu">
+                    <label> Deadline </label>
+                    <input class="input-side" type="number">
+                </div>
+
+            </div>
+            
+            <script>
+                // Mengupdate tahun secara dinamis
+                const yearElement = document.getElementById('year');
+                const currentYear = new Date().getFullYear();
+                yearElement.textContent = currentYear;
+            </script>
+
+        </div>
+
+        <div class="content" style="display: flex; flex-wrap: wrap;">
+
+            <div style="width: 100%; height: 10%;">
+                <div class="str-c">
+                    <div>
+                    <div class=""> Setting</div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div style="display: flex;">
+                <div>
+                    <div>
+                        Bobot
+                    </div>
+                    <table class="tbl">
+                        <tr>
+                            <td>Baju Katun</td>
+                            <td>
+                                <input type="number" id="bobot1"  placeholder="Masukkan Lama Pengerjaan">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baju Denim</td>
+                            <td>
+                                <input type="number" id="bobot2" placeholder="Masukkan Lama Pengerjaan">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baju Sutra</td>
+                            <td>
+                                <input type="number" id="bobot3" placeholder="Masukkan Lama Pengerjaan">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baju Rayon</td>
+                            <td>
+                                <input type="number" id="bobot4" placeholder="Masukkan Lama Pengerjaan">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baju Linen</td>
+                            <td>
+                                <input type="number" id="bobot5" placeholder="Masukkan Lama Pengerjaan">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baju Wol</td>
+                            <td>
+                                <input type="number" id="bobot6" placeholder="Masukkan Lama Pengerjaan">
+                            </td>
+                        </table>
+            
+                        <div class="btnsave">
+                        <button onclick="simpandata1()" type="submit">Simpan Data</button>
+                        </div>
+                </div>
+                
+                <div>
+                    <div>
+                        profit
+                    </div>
+                    <table class="tbl">
+                        <tr>
+                            <td>Baju Katun</td>
+                            <td>
+                                <input type="number" id="profit1" placeholder="Masukkan Profit">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baju Denim</td>
+                            <td>
+                                <input type="number" id="profit2" placeholder="Masukkan Profit">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baju Sutra</td>
+                            <td>
+                                <input type="number" id="profit3" placeholder="Masukkan Profit">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baju Rayon</td>
+                            <td>
+                                <input type="number" id="profit4" placeholder="Masukkan Profit">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baju Linen</td>
+                            <td>
+                                <input type="number" id="profit5" placeholder="Masukkan Profit">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Baju Wol</td>
+                            <td>
+                                <input type="number" id="profit6" placeholder="Masukkan Profit">
+                            </td>
+                        </tr>
+                        </table>
+            
+                        <div class="btnsave">
+                        <button onclick="simpandata2()" type="submit">Simpan Data</button>
+                        </div>
+                </div>
+                </div>
+                <div class="hasil">
+
+                </div>
+            </div>
+            
+        
+    </body>
+
+    <script>
+        const content = document.querySelector('.hasil');
+        let bobot = [6, 4, 8, 5, 7, 2, 1];
+        let profit = [50, 35, 25, 20, 45, 55];
+        let nama = ["Baju Katun", "Baju Denim", "Baju Sutra", "Baju Rayon", "Baju Linen", "Baju Wol"];
+
+        function greedymaxprofit(arr) {
+        arr.sort((a, b) => b[2] - a[2]);
+        let baju = [];
+        let entry_total_time = document.querySelector('.input-side').value;
+        let total_time = parseInt(entry_total_time);
+        let total_profit =0;
+        
+        for (let i = 0; i < arr.length; i++) {
+            let task = arr[i];
+            if (total_time >= task[1] && total_time - task[1] >= 0) {
+            baju.push(task[0]);
+            total_profit += task[2];
+            total_time -= task[1];
+            }
+        }
+
+        let remaining_time = total_time;
+        return [remaining_time, baju,total_profit];
+        }
+
+        function greedyminprofit(arr) {
+        arr.sort((a, b) => a[2] - b[2]);
+        let baju = [];
+        let entry_total_time = document.querySelector('.input-side').value;
+        let total_time = parseInt(entry_total_time);
+        let total_profit =0;
+
+        console.log(arr);
+        for (let i = 0; i < arr.length; i++) {
+            let task = arr[i];
+            if (total_time >= task[1] && total_time - task[1] >= 0) {
+            baju.push(task[0]);
+            total_profit += task[2];
+            total_time -= task[1];
+            }
+        }
+
+        let remaining_time = total_time;
+        return [remaining_time, baju,total_profit];
+        }
+
+        function greedymaxweight(arr) {
+        arr.sort((a, b) => b[1] - a[1]);
+        let baju = [];
+        let entry_total_time = document.querySelector('.input-side').value;
+        let total_time = parseInt(entry_total_time);
+        let total_profit =0;
+
+        for (let i = 0; i < arr.length; i++) {
+            let task = arr[i];
+            if (total_time >= task[1] && total_time - task[1] >= 0) {
+            baju.push(task[0]);
+            total_profit += task[2];
+            total_time -= task[1];
+            }
+        }
+
+        let remaining_time = total_time;
+        return [remaining_time, baju,total_profit];
+        }
+
+        function greedyminweight(arr) {
+        arr.sort((a, b) => a[1] - b[1]);
+        let baju = [];
+        let entry_total_time = document.querySelector('.input-side').value;
+        let total_time = parseInt(entry_total_time);
+        let total_profit =0;
+
+        console.log(arr);
+        for (let i = 0; i < arr.length; i++) {
+            let task = arr[i];
+            if (total_time >= task[1] && total_time - task[1] >= 0) {
+            baju.push(task[0]);
+            total_profit += task[2];
+            total_time -= task[1];
+            }
+        }
+
+        let remaining_time = total_time;
+        return [remaining_time, baju,total_profit];
+        }
+
+        function greedymaxdensity(arr) {
+        arr.sort((a, b) => (b[2] / b[1]) - (a[2] / a[1]));
+        let baju = [];
+        let entry_total_time = document.querySelector('.input-side').value;
+        let total_time = parseInt(entry_total_time);
+        let total_profit =0;
+
+        for (let i = 0; i < arr.length; i++) {
+            let task = arr[i];
+            if (total_time >= task[1] && total_time - task[1] >= 0) {
+            baju.push(task[0]);
+            total_profit += task[2];
+            total_time -= task[1];
+            }
+        }
+
+        let remaining_time = total_time;
+        return [remaining_time, baju,total_profit];
+        }
+
+        function greedymindensity(arr) {
+        arr.sort((a, b) => (b[2] / b[1]) - (a[2] / a[1]));
+        let baju = [];
+        let entry_total_time = document.querySelector('.input-side').value;
+        let total_time = parseInt(entry_total_time);
+        let total_profit =0;
+
+        console.log(arr);
+        for (let i = 0; i < arr.length; i++) {
+            let task = arr[i];
+            if (total_time >= task[1] && total_time - task[1] >= 0) {
+            baju.push(task[0]);
+            total_profit += task[2];
+            total_time -= task[1];
+            }
+        }
+
+        let remaining_time = total_time;
+        return [remaining_time, baju,total_profit];
+        }
+
+        function rendercontent1(){
+            const VariasiGreedy = document.querySelector('.sel_gre').value;
+            const greedy = document.querySelector('.sel_mm').value;
+            let newarr = [];
+            for (let i = 0; i < nama.length; i++) {
+            newarr.push([nama[i], bobot[i], profit[i]]);
+            }
+            console.log(newarr);
+
+            if (VariasiGreedy=="profit") {
+                let remaining_time;
+                let baju;
+                let total_profit;
+                if (greedy=="Min") {
+                    [remaining_time,baju,total_profit]=greedyminprofit(newarr);
+                }
+                else if(greedy=="Max"){
+                    [remaining_time,baju,total_profit]=greedymaxprofit(newarr);
+                }
+
+                content.innerHTML=`
+
+                <div class="str-c">
+                    <div>
+                    <div class="">Greedy By Profit</div>
+                    </div>
+                </div>
+                <hr>
+                <table  class="tbl-hasil">
+                    
+                    <tr>
+                        <td>Baju yang dijadwalkan:</td>
+                        <td>
+                            <th>${baju}</th>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Total Profit:</td>
+                        <td>
+                            <th>${total_profit}</th>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sisa Waktu:</td>
+                        <td>
+                            <th>${remaining_time}</th>
+                        </td>
+                    </tr>
+                </table>
+                `   
+            }
+            else if (VariasiGreedy=="weight") {
+                let remaining_time;
+                let baju;
+                let total_profit;
+                if (greedy=="Min") {
+                    [remaining_time,baju,total_profit]=greedyminweight(newarr);
+                }
+                else if(greedy=="Max"){
+                    [remaining_time,baju,total_profit]=greedymaxweight(newarr);
+                }
+
+                content.innerHTML=`
+
+                <div class="str-c">
+                    <div>
+                    <div class="">Greedy By Weight</div>
+                    </div>
+                </div>
+                <hr>
+
+                <table  class="tbl-hasil">
+                    <tr>
+                        <td>Baju yang dijadwalkan:</td>
+                        <td>
+                            <th>${baju}</th>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Total Profit:</td>
+                        <td>
+                            <th>${total_profit}</th>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sisa Waktu:</td>
+                        <td>
+                            <th>${remaining_time}</th>
+                        </td>
+                    </tr>
+                </table>
+                `  
+            }
+            else if (VariasiGreedy=="density") {
+                let remaining_time;
+                let baju;
+                let total_profit;
+                if (greedy=="Min") {
+                    [remaining_time,baju,total_profit]=greedymindensity(newarr);
+                }
+                else if(greedy=="Max"){
+                    [remaining_time,baju,total_profit]=greedymaxdensity(newarr);
+                }
+
+                content.innerHTML=`
+
+                <div class="str-c">
+                    <div>
+                    <div class="">Greedy By Density</div>
+                    </div>
+                </div>
+                <hr>
+
+                <table  class="tbl-hasil">
+                    <tr>
+                        <td>Baju yang dijadwalkan:</td>
+                        <td>
+                            <th>${baju}</th>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Total Profit:</td>
+                        <td>
+                            <th>${total_profit}</th>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sisa Waktu:</td>
+                        <td>
+                            <th>${remaining_time}</th>
+                        </td>
+                    </tr>
+                </table>
+                `
+            }
+
+        }
+
+        function simpandata1(){
+            bobot1 = document.querySelector('#bobot1').value;
+            bobot2 = document.querySelector('#bobot2').value;
+            bobot3 = document.querySelector('#bobot3').value;
+            bobot4 = document.querySelector('#bobot4').value;
+            bobot5 = document.querySelector('#bobot5').value;
+            bobot6 = document.querySelector('#bobot6').value;
+            bobot = [parseInt(bobot1),parseInt(bobot2),parseInt(bobot3),parseInt(bobot4),parseInt(bobot5),parseInt(bobot6)];
+        }
+        function simpandata2(){
+            profit1 = document.querySelector('#profit1').value;
+            profit2 = document.querySelector('#profit2').value;
+            profit3 = document.querySelector('#profit3').value;
+            profit4 = document.querySelector('#profit4').value;
+            profit5 = document.querySelector('#profit5').value;
+            profit6 = document.querySelector('#profit6').value;
+            profit = [parseInt(profit1),parseInt(profit2),parseInt(profit3),parseInt(profit4),parseInt(profit5),parseInt(profit6)];
+        }
+
+    </script>
+</html>
